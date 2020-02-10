@@ -64,7 +64,8 @@ class UserService {
                       followingCount: data.edge_follow.count,
                       biography: data.biography,
                       pictureUrl: data.profile_pic_url,
-                      pictureUrlHd: data.profile_pic_url_hd
+                      pictureUrlHd: data.profile_pic_url_hd,
+                      externalUrl: data.external_url
                     };
                     resolve(user);
                     return false;
