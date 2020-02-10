@@ -12,6 +12,7 @@ router.get("/", (req, res) => {
     endpoints: [
       "api/users/{username}",
       "api/users/{username}/profile",
+      "api/users/{username}/posts",
       "api/posts/tag/{tag}"
     ]
   });
@@ -48,6 +49,32 @@ router.get("/posts/tag/:tag", (req, res) => {
     })
     .catch(error => {
       res.status(500).json(error);
+    });
+});
+
+router.get("/users/:username/posts", (req, res) => {
+  const username = req.params.username;
+  UserService.getUser(username)
+    .then(user => {
+      if (user.isPrivate) {
+        res.status(401).json({
+          message: "This account is private!",
+          status: 401
+        });
+      } else {
+        const first = req.query.first;
+        const after = req.query.after;
+        PostService.getUserPosts(user, first, after)
+          .then(posts => {
+            res.json(posts);
+          })
+          .catch(error => {
+            res.status(error.status).json(error);
+          });
+      }
+    })
+    .catch(error => {
+      res.status(error.status).json(error);
     });
 });
 
